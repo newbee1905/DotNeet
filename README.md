@@ -4,6 +4,16 @@
 
 A cli tool to download, search and read manga built with C#
 
+## Dependencies
+
+Please install the developer packages of webkit2gtk and libgtk on your machine.
+
+### Debian and Ubuntu based
+
+```bash
+sudo apt install -y libwebkit2gtk-4.0-dev libgtk-3-dev
+```
+
 ## Build
 
 ```bash
