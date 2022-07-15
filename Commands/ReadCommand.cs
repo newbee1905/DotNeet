@@ -60,7 +60,7 @@ There are totally {selectedManga.total_chapter} chapters
 									selectedManga.title,
 									$"Chapter {chapter.chap} {chapter.title}"
 								);
-							Utils.WriteLineColor("Finsihed reading!", ConsoleColor.Green);
+							Utils.WriteLineColor("Finished reading!", ConsoleColor.Green);
 							break;
 						default:
 							Utils.WriteError("Please insert number with value in range of listed result");

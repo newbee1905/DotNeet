@@ -67,7 +67,7 @@ There are totally {selectedManga.total_chapter} chapters
 								);
 							}
 							Task.WaitAll(downloadTasks.ToArray());
-							Utils.WriteLineColor("Finsihed downloading!", ConsoleColor.Green);
+							Utils.WriteLineColor("Finished downloading!", ConsoleColor.Green);
 							break;
 						default:
 							Utils.WriteError("Please insert number with value in range of listed result");
