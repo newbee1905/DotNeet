@@ -8,6 +8,10 @@ A cli tool to download, search and read manga built with C#
 
 Please install the developer packages of webkit2gtk and libgtk on your machine.
 
+**NOTE**
+
+Currently the program is not compilable on MacOS
+
 ### Debian and Ubuntu based
 
 ```bash
