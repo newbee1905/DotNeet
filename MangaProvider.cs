@@ -29,7 +29,7 @@ where TChapter : BaseChapter<TPage>, new()
 where TPage : BasePage, new() {
 	private bool _disposed = false;
 
-	public readonly string BaseUrl, PageCdn;
+	public readonly string BaseUrl;
 	public static readonly HttpClient Client = new();
 	public static readonly HttpClient PageClient = new();
 	public readonly Renderer<TPage> Renderer = new();
@@ -39,9 +39,8 @@ where TPage : BasePage, new() {
 	/// Setup provider's necessary features
 	/// HttpClients and CDN links
 	/// </summary>
-	public MangaProvider(string url, string pageCdn) {
+	public MangaProvider(string url) {
 		BaseUrl = url;
-		PageCdn = pageCdn;
 		Client.BaseAddress = new Uri(url);
 		Client.Timeout = new TimeSpan(0, 0, 5);
 		Client.DefaultRequestHeaders.Accept.Clear();

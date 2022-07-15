@@ -10,7 +10,7 @@ Please install the developer packages of webkit2gtk and libgtk on your machine.
 
 **NOTE**
 
-Currently the program is not compilable on MacOS
+Currently, the program is not compilable on MacOS
 
 ### Debian and Ubuntu based
 
@@ -27,10 +27,14 @@ dotnet build --configuration Release
 ## Run
 
 ```bash
-./bin/Release/netcoreapp6.0/DotNeet <commands> <args>
+./bin/Release/net6.0/DotNeet [command] [options]
 ```
 
 ## Help
+
+- `search` → return the URL of that chapter
+- `download` → download all images of that chapter
+- `read` → open all the images inside a WebView
 
 ```
 Description:
@@ -48,3 +52,9 @@ Commands:
   download <manga-name>  Download Manga to read.
   read <manga-name>      Read Manga to read.
 ```
+
+## Credits
+
+### Providers
+
+- [Comickfun's api](https://api.comick.fun/docs/static/index.html)

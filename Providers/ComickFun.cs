@@ -31,7 +31,12 @@ public class Manga : BaseManga<Chapter> {
 }
 
 public class Provider : MangaProvider<Manga, Chapter, Page> {
-	public Provider() : base("https://api.comick.fun", "https://meo{0}.comick.pictures/{1}") { }
+	public readonly string PageCdn, SiteUrl;
+
+	public Provider() : base("https://api.comick.fun") {
+		PageCdn = "https://meo{0}.comick.pictures/{1}";
+		SiteUrl = "https://preview.comick.fun/comic";
+	}
 	public const string Alias = "comickfun";
 
 	public override async Task<List<Manga>> GetMangaList(string query) {
@@ -142,5 +147,5 @@ public class Provider : MangaProvider<Manga, Chapter, Page> {
 	}
 
 	public override String GetChapterUrl(Manga manga, Chapter chap)
-		=> $"https://preview.comick.fun/comic/{manga.slug}/{chap.hid}";
+		=> $"{SiteUrl}/{manga.slug}/{chap.hid}";
 }
