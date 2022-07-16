@@ -35,8 +35,10 @@ class DownloadCommand : Command {
 					Utils.WriteColor("> Select Manga Number: ", ConsoleColor.DarkBlue);
 					switch (int.TryParse(Console.ReadLine(), out int mangaIndex)) {
 					case true:
-						if (mangaIndex < 1 || mangaIndex > mangaList.Count)
-							goto default;
+						if (mangaIndex < 1 || mangaIndex > mangaList.Count) {
+							Utils.WriteError("Please insert number with value in range of listed result");
+							break;
+						}
 						var selectedManga = await provider.GetManga(mangaIndex, mangaList);
 						Utils.WriteLineColor(selectedManga.desc, ConsoleColor.DarkGreen);
 
@@ -56,8 +58,10 @@ There are totally {selectedManga.chapters.Count} chapters
 
 						switch (int.TryParse(Console.ReadLine(), out int chapIndex)) {
 						case true:
-							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
-								goto default;
+							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count) {
+								Utils.WriteError("Please insert number with value in range of listed result");
+								break;
+							}
 							var chapter = await provider.GetChapter(chapIndex, selectedManga.chapters);
 							var pages = await provider.GetPages(chapter);
 							var downloadTasks = new List<Task>();
