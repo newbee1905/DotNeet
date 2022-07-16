@@ -58,3 +58,4 @@ Commands:
 ### Providers
 
 - [Comickfun's api](https://api.comick.fun/docs/static/index.html)
+- [Battwo](battwo.com/)
