@@ -1,0 +1,9 @@
+@startuml
+namespace DotNeet {
+	class Utils {
+		+ {static} WriteColor(output:string, foreground:ConsoleColor, background:ConsoleColor) : void
+		+ {static} WriteLineColor(output:string, foreground:ConsoleColor, background:ConsoleColor) : void
+		+ {static} WriteError(output:string) : void
+	}
+}
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+namespace DotNeet {
+	class "Renderer`1"<TPage> {
+		+ Renderer()
+		+ Start(pages:List<TPage>, mangaName:string, chapterName:string) : void
+	}
+	Webview <|-- "Renderer`1"
+}
+@enduml

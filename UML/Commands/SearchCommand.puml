@@ -1,0 +1,10 @@
+@startuml
+namespace DotNeet {
+	namespace DotNeet.Commands {
+		class SearchCommand {
+			+ SearchCommand()
+		}
+	}
+	Command <|-- DotNeet.Commands.SearchCommand
+}
+@enduml

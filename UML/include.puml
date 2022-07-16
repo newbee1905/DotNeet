@@ -1,0 +1,146 @@
+@startuml
+namespace DotNeet {
+	class Utils {
+		+ {static} WriteColor(output:string, foreground:ConsoleColor, background:ConsoleColor) : void
+		+ {static} WriteLineColor(output:string, foreground:ConsoleColor, background:ConsoleColor) : void
+		+ {static} WriteError(output:string) : void
+	}
+
+	abstract class BasePage {
+		+ BasePage()
+		+ width : int <<get>> <<set>>
+		+ height : int <<get>> <<set>>
+		+ base64 : string <<get>> <<set>>
+		+ src : string <<get>> <<set>>
+		+ bytes: byte[] <<get>> <<set>>
+		+ stream : Stream <<get>> <<set>>
+	}
+
+	abstract class "BaseChapter`1"<TPage> {
+		+ BaseChapter()
+	}
+
+	abstract class "BaseManga`1"<TChapter> {
+		+ BaseManga()
+		+ chapters List<TChapter> <<get>> <<set>>
+	}
+
+	abstract class "MangaProvider`3"<TManga,TChapter,TPage> {
+		+ <<readonly>> BaseUrl : string
+		+ Lang : string = "en"
+		+ MangaProvider(url:string)
+		+ Dispose() : void
+		+ <<virtual>> <<async>> GetMangaList(query:string) : Task<List<TManga>>
+		+ <<virtual>> <<async>> GetManga(mangaIndex:int, mangaList:List<TManga>) : Task<TManga>
+		+ <<virtual>> <<async>> GetChapter(chapIndex:int, chapterList:List<TChapter>) : Task<TChapter>
+		+ <<virtual>> GetChapterUrl(manga:TManga, chap:TChapter) : String
+		+ <<virtual>> <<async>> GetPages(chap:TChapter) : Task<List<TPage>>
+		+ <<virtual>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
+	}
+
+	class "Renderer`1"<T> {
+	}
+
+	IDisposable <|-- "MangaProvider`3"
+	"MangaProvider`3" o-> "Client" HttpClient
+	"MangaProvider`3" o-> "PageClient" HttpClient
+	"MangaProvider`3" o-> "Renderer<TPage>" "Renderer`1"
+	"MangaProvider`3" o- "BaseManga`1"
+	"MangaProvider`3" o- "BaseChapter`1"
+	"MangaProvider`3" o- "BasePage"
+	class Program {
+			+ {static} <<async>> Main(args:string[]) : Task
+	}
+	Program --> "root" RootCommand
+	Program --> Utils
+	RootCommand --> "MangaProvider`3"
+	RootCommand --> Command
+
+	class "Renderer`1"<TPage> {
+		+ Renderer()
+		+ Start(pages:List<TPage>, mangaName:string, chapterName:string) : void
+	}
+
+	Webview <|-- "Renderer`1"
+	namespace DotNeet.Providers {
+		class ProvidersList {
+			+ {static} GetProviderList : string[]
+			+ {static} GetProvider(name:string) : dynamic
+		}
+		namespace DotNeet.Providers.ComickFun {
+
+			class Page {
+				+ h : int <<get>> <<set>>
+				+ w : int <<get>> <<set>>
+				+ b2key : string <<get>> <<set>>
+			}
+			class Chapter {
+				+ title : string <<get>> <<set>>
+				+ chap : string <<get>> <<set>>
+				+ slug : string <<get>> <<set>>
+				+ id : int <<get>> <<set>>
+				+ hid : string <<get>> <<set>>
+				+ rating : string <<get>> <<set>>
+				+ demographic : byte? <<get>> <<set>>
+				+ md_images: List<TPage> <<get>> <<set>>
+			}
+			Manga --> "comic" Manga
+			class Manga {
+				+ title : string <<get>> <<set>>
+				+ slug : string <<get>> <<set>>
+				+ id : int <<get>> <<set>>
+				+ rating : string <<get>> <<set>>
+				+ desc : string <<get>> <<set>>
+				+ parsed : string <<get>> <<set>>
+				+ last_chapter : float <<get>> <<set>>
+				+ total_chapter : int <<get>> <<set>>
+			}
+			Provider o-- Manga
+			Provider o-- Chapter
+			Provider o-- Page
+			class Provider {
+				+ <<readonly>> PageCdn : string
+				+ <<readonly>> SiteUrl : string
+				+ Provider()
+				+ <<const>> Alias : string = "comickfun"
+				+ <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
+				+ <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
+				+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>) : Task<Chapter>
+				+ <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
+				+ <<override>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
+				+ <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
+			}
+		}
+	}
+
+	BasePage <|-- DotNeet.Providers.ComickFun.Page
+	"BaseChapter`1" "<Page>" <|-- DotNeet.Providers.ComickFun.Chapter
+	"BaseManga`1" "<Chapter>" <|-- DotNeet.Providers.ComickFun.Manga
+	"MangaProvider`3" "<Manga,Chapter,Page>" <|-- DotNeet.Providers.ComickFun.Provider
+	Program --> DotNeet.Providers.ProvidersList
+
+
+	namespace DotNeet.Commands {
+		class SearchCommand {
+			+ SearchCommand()
+		}
+
+		class DownloadCommand {
+			+ DownloadCommand()
+		}
+
+		class ReadCommand {
+			+ ReadCommand()
+		}
+
+		class ProvidersListingCommand {
+			+ ProvidersListingCommand()
+		}
+
+	}
+	Command --> DotNeet.Commands.DownloadCommand
+	Command --> DotNeet.Commands.ReadCommand
+	Command --> DotNeet.Commands.ProvidersListingCommand
+	Command --> DotNeet.Commands.SearchCommand
+}
+@enduml

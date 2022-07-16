@@ -1,0 +1,6 @@
+@startuml
+class Program {
+    + {static} <<async>> Main(args:string[]) : Task
+}
+Program --> "root" RootCommand
+@enduml
