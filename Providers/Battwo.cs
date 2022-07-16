@@ -102,7 +102,7 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 					return chapter;
 				})
 				.ToList();
-			selectedManga.last_chapter = selectedManga.chapters.Last().chap;
+			selectedManga.last_chapter = selectedManga.chapters[0].chap;
 
 			return selectedManga;
 		}
