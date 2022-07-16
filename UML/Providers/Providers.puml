@@ -1,5 +1,8 @@
 @startuml
-class ProvidersList {
-    + {static} GetProvider(name:string) : dynamic
+namespace DotNeet.Providers {
+	class ProvidersList {
+		+ {static} GetProviderList : string[]
+		+ {static} GetProvider(name:string) : dynamic
+	}
 }
 @enduml
