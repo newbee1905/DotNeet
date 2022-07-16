@@ -84,7 +84,7 @@ There are totally {selectedManga.chapters.Count} chapters
 							for (int i = 0; i < pages.Count; i++)
 							{
 								int index = i;
-								downloadTasks.Add(Task.Run(
+								downloadTasks.Add(Task.Run(() =>
 									File.WriteAllBytesAsync($"{basePath}/page-{index}.jpg", pages[index].bytes))
 								);
 							}
