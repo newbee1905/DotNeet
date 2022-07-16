@@ -1,0 +1,10 @@
+@startuml
+namespace DotNeet {
+	namespace DotNeet.Commands {
+		class DownloadCommand {
+			+ DownloadCommand()
+		}
+	}
+	Command <|-- DotNeet.Commands.DownloadCommand
+}
+@enduml

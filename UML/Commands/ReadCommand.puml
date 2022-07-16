@@ -1,0 +1,10 @@
+@startuml
+namespace DotNeet {
+	namespace DotNeet.Commands {
+		class ReadCommand {
+			+ ReadCommand()
+		}
+	}
+	Command <|-- DotNeet.Commands.ReadCommand
+}
+@enduml

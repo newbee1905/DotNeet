@@ -38,15 +38,18 @@ class ReadCommand : Command {
 						var selectedManga = provider.GetManga(mangaIndex, mangaList).Result;
 						Utils.WriteLineColor(selectedManga.desc, ConsoleColor.DarkGreen);
 
-						for (int i = 0; i < selectedManga.total_chapter; ++i) {
-							var chapter = selectedManga.chapters[selectedManga.total_chapter - i - 1];
+						if (selectedManga.chapters is null || selectedManga.chapters.Count == 0)
+							throw new Exception("This manga has no chapters");
+
+						for (int i = 0; i < selectedManga.chapters.Count; ++i) {
+							var chapter = selectedManga.chapters[selectedManga.chapters.Count - i - 1];
 							Utils.WriteLineColor($"[{i + 1}] Chapter {chapter.chap}: {chapter.title}", (ConsoleColor)(i % 5 + 9));
 						}
 						Utils.WriteColor(
-							@$"The latest chapter is {selectedManga.last_chapter}
-There are totally {selectedManga.total_chapter} chapters
+								@$"The latest chapter is {selectedManga.last_chapter}
+There are totally {selectedManga.chapters.Count} chapters
 > Select Chapter that you want to read: ",
-							ConsoleColor.DarkBlue
+								ConsoleColor.DarkBlue
 						);
 
 						switch (int.TryParse(Console.ReadLine(), out int chapIndex)) {
@@ -54,13 +57,13 @@ There are totally {selectedManga.total_chapter} chapters
 							var chapter = provider.GetChapter(chapIndex, selectedManga.chapters).Result;
 							var pages = provider.GetPages(chapter).Result;
 							provider
-								.Renderer
-								.Start(
-									pages,
-									selectedManga.title,
-									$"Chapter {chapter.chap} {chapter.title}"
-								);
-							Utils.WriteLineColor("Finsihed reading!", ConsoleColor.Green);
+									.Renderer
+									.Start(
+											pages,
+											selectedManga.title,
+											$"Chapter {chapter.chap} {chapter.title}"
+									);
+							Utils.WriteLineColor("Finished reading!", ConsoleColor.Green);
 							break;
 						default:
 							Utils.WriteError("Please insert number with value in range of listed result");

@@ -1,0 +1,46 @@
+@startuml
+namespace DotNeet {
+	abstract class BasePage {
+		+ BasePage()
+		+ width : int <<get>> <<set>>
+		+ height : int <<get>> <<set>>
+		+ base64 : string <<get>> <<set>>
+		+ src : string <<get>> <<set>>
+		+ bytes: byte[] <<get>> <<set>>
+		+ stream : Stream <<get>> <<set>>
+	}
+
+	abstract class "BaseChapter`1"<TPage> {
+		+ BaseChapter()
+	}
+
+	abstract class "BaseManga`1"<TChapter> {
+		+ BaseManga()
+		+ chapters List<TChapter> <<get>> <<set>>
+	}
+
+	abstract class "MangaProvider`3"<TManga,TChapter,TPage> {
+		+ <<readonly>> BaseUrl : string
+		+ Lang : string = "en"
+		+ MangaProvider(url:string)
+		+ Dispose() : void
+		+ <<virtual>> <<async>> GetMangaList(query:string) : Task<List<TManga>>
+		+ <<virtual>> <<async>> GetManga(mangaIndex:int, mangaList:List<TManga>) : Task<TManga>
+		+ <<virtual>> <<async>> GetChapter(chapIndex:int, chapterList:List<TChapter>) : Task<TChapter>
+		+ <<virtual>> GetChapterUrl(manga:TManga, chap:TChapter) : String
+		+ <<virtual>> <<async>> GetPages(chap:TChapter) : Task<List<TPage>>
+		+ <<virtual>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
+	}
+
+	class "Renderer`1"<T> {
+	}
+
+	IDisposable <|-- "MangaProvider`3"
+	"MangaProvider`3" o-> "Client" HttpClient
+	"MangaProvider`3" o-> "PageClient" HttpClient
+	"MangaProvider`3" o-> "Renderer<TPage>" "Renderer`1"
+	"MangaProvider`3" o- "BaseManga`1"
+	"MangaProvider`3" o- "BaseChapter`1"
+	"MangaProvider`3" o- "BasePage"
+}
+@enduml

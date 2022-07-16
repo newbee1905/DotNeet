@@ -38,21 +38,24 @@ class SearchCommand : Command {
 						var selectedManga = await provider.GetManga(mangaIndex, mangaList);
 						Utils.WriteLineColor(selectedManga.desc, ConsoleColor.DarkGreen);
 
-						for (int i = 0; i < selectedManga.total_chapter; ++i) {
-							var chapter = selectedManga.chapters[selectedManga.total_chapter - i - 1];
+						if (selectedManga.chapters is null || selectedManga.chapters.Count == 0)
+							throw new Exception("This manga has no chapters");
+
+						for (int i = 0; i < selectedManga.chapters.Count; ++i) {
+							var chapter = selectedManga.chapters[selectedManga.chapters.Count - i - 1];
 							Utils.WriteLineColor($"[{i + 1}] Chapter {chapter.chap}: {chapter.title}", (ConsoleColor)(i % 5 + 9));
 						}
 						Utils.WriteColor(
-							@$"The latest chapter is {selectedManga.last_chapter}
-There are totally {selectedManga.total_chapter} chapters
+								@$"The latest chapter is {selectedManga.last_chapter}
+There are totally {selectedManga.chapters.Count} chapters
 > Select Chapter that you want to read: ",
-							ConsoleColor.DarkBlue
+								ConsoleColor.DarkBlue
 						);
 
 						switch (int.TryParse(Console.ReadLine(), out int chapIndex)) {
 						case true:
-						if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
-							goto default;
+							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
+								goto default;
 							var chapter = await provider.GetChapter(chapIndex, selectedManga.chapters);
 							Utils.WriteLineColor(provider.GetChapterUrl(selectedManga, chapter), ConsoleColor.Green);
 							break;

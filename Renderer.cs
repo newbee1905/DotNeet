@@ -14,8 +14,8 @@ using SharpWebview.Content;
 /// Howerver, in this case where we directly insert the string
 /// big file is not a problem.
 /// </summary>
-public class Renderer<TPage> : Webview where TPage: BasePage, new() {
-	public Renderer() : base() {}
+public class Renderer<TPage> : Webview where TPage : BasePage, new() {
+	public Renderer() : base() { }
 
 	public void Start(List<TPage> pages, string mangaName, string chapterName) {
 		StringBuilder html = new();
