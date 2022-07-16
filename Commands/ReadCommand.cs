@@ -31,10 +31,9 @@ class ReadCommand : Command {
 					for (int i = 0; i < mangaList.Count; ++i)
 						Utils.WriteLineColor($"[{i + 1}] {mangaList[i].title}", (ConsoleColor)(i % 5 + 9));
 					Utils.WriteColor("> Select Manga Number: ", ConsoleColor.DarkBlue);
-					switch (int.TryParse(Console.ReadLine(), out int mangaIndex)) {
-					case true:
+					if (int.TryParse(Console.ReadLine(), out int mangaIndex)) {
 						if (mangaIndex < 1 || mangaIndex > mangaList.Count)
-							goto default;
+							throw new Exception("Please insert number with value in range of listed result");
 						var selectedManga = provider.GetManga(mangaIndex, mangaList).Result;
 						Utils.WriteLineColor(selectedManga.desc, ConsoleColor.DarkGreen);
 
@@ -52,28 +51,23 @@ There are totally {selectedManga.chapters.Count} chapters
 								ConsoleColor.DarkBlue
 						);
 
-						switch (int.TryParse(Console.ReadLine(), out int chapIndex)) {
-						case true:
+						if (int.TryParse(Console.ReadLine(), out int chapIndex)) {
+							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
+								throw new Exception("Please insert number with value in range of listed result");
 							var chapter = provider.GetChapter(chapIndex, selectedManga.chapters).Result;
 							var pages = provider.GetPages(chapter).Result;
 							provider
-									.Renderer
-									.Start(
-											pages,
-											selectedManga.title,
-											$"Chapter {chapter.chap} {chapter.title}"
-									);
+								.Renderer
+								.Start(
+									pages,
+									selectedManga.title,
+									$"Chapter {chapter.chap} {chapter.title}"
+								);
 							Utils.WriteLineColor("Finished reading!", ConsoleColor.Green);
-							break;
-						default:
-							Utils.WriteError("Please insert number with value in range of listed result");
-							break;
-						}
-						break;
-					default:
-						Utils.WriteError("Please insert number with value in range of listed result");
-						break;
-					}
+						} else
+							throw new Exception("Please insert an interger");
+					} else
+						throw new Exception("Please insert an interger");
 				}
 			} catch (TimeoutException) {
 				Utils.WriteError("Please recheck your internet connection!");
