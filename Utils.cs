@@ -4,14 +4,16 @@ namespace DotNeet;
 /// Basic functions that will be used througout
 /// the program
 /// </summary>
-public class Utils {
+public class Utils
+{
 	private static ConsoleColor _defaultForeground = Console.ForegroundColor;
 	private static ConsoleColor _defaultBackground = Console.BackgroundColor;
 
 	/// <summary>
 	/// Write Text with color and reset it back the the default one
 	/// </summary>
-	public static void WriteColor(string output, ConsoleColor foreground = (ConsoleColor)(-1), ConsoleColor background = (ConsoleColor)(-1)) {
+	public static void WriteColor(string output, ConsoleColor foreground = (ConsoleColor)(-1), ConsoleColor background = (ConsoleColor)(-1))
+	{
 		if (foreground == (ConsoleColor)(-1))
 			foreground = _defaultForeground;
 		if (background == (ConsoleColor)(-1))

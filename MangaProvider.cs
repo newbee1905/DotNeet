@@ -3,7 +3,8 @@ namespace DotNeet;
 using System;
 using System.IO;
 
-public abstract class BasePage {
+public abstract class BasePage
+{
 	public BasePage() { }
 	public int width { get; set; }
 	public int height { get; set; }
@@ -13,11 +14,13 @@ public abstract class BasePage {
 	public string src { get; set; }
 }
 
-public abstract class BaseChapter<TPage> {
+public abstract class BaseChapter<TPage>
+{
 	public BaseChapter() { }
 }
 
-public abstract class BaseManga<TChapter> {
+public abstract class BaseManga<TChapter>
+{
 	public BaseManga()
 		=> chapters = new();
 	public List<TChapter> chapters { get; set; }
@@ -26,7 +29,8 @@ public abstract class BaseManga<TChapter> {
 public abstract class MangaProvider<TManga, TChapter, TPage> : IDisposable
 where TManga : BaseManga<TChapter>, new()
 where TChapter : BaseChapter<TPage>, new()
-where TPage : BasePage, new() {
+where TPage : BasePage, new()
+{
 	private bool _disposed = false;
 
 	public readonly string BaseUrl;
@@ -39,7 +43,8 @@ where TPage : BasePage, new() {
 	/// Setup provider's necessary features
 	/// HttpClients and CDN links
 	/// </summary>
-	public MangaProvider(string url) {
+	public MangaProvider(string url)
+	{
 		BaseUrl = url;
 		Client.BaseAddress = new Uri(url);
 		Client.Timeout = new TimeSpan(0, 0, 5);
@@ -55,7 +60,8 @@ where TPage : BasePage, new() {
 
 	public void Dispose() => Dispose(true);
 
-	protected virtual void Dispose(bool disposing) {
+	protected virtual void Dispose(bool disposing)
+	{
 		if (_disposed)
 			return;
 

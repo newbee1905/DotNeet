@@ -8,7 +8,8 @@ using DotNeet.Providers;
 /// The user will select the manga from their search param
 /// Then they will select the chapter that they want to download
 /// </summary>
-class DownloadCommand : Command {
+class DownloadCommand : Command
+{
 	private Argument<string> nameArgument =
 		new("manga-name", "Manga's name or part of it that you want to download.");
 	private Option<string> providerOption =
@@ -22,14 +23,18 @@ class DownloadCommand : Command {
 	/// From color 9 - 14
 	/// = Blue, Green, Cyan, Red, Magenta, Yellow
 	/// </summary>
-	public DownloadCommand() : base("download", "Download Manga to read.") {
+	public DownloadCommand() : base("download", "Download Manga to read.")
+	{
 		this.AddArgument(nameArgument);
 		this.AddOption(providerOption);
 		this.AddOption(langOption);
 
-		this.SetHandler(async (mangaName, providerName, lang) => {
-			try {
-				using (var provider = ProvidersList.GetProvider(providerName)) {
+		this.SetHandler(async (mangaName, providerName, lang) =>
+		{
+			try
+			{
+				using (var provider = ProvidersList.GetProvider(providerName))
+				{
 					if (provider is null)
 						throw new Exception("Please select existed provider!");
 					provider.Lang = lang;
@@ -37,9 +42,11 @@ class DownloadCommand : Command {
 					for (int i = 0; i < mangaList.Count; ++i)
 						Utils.WriteLineColor($"[{i + 1}] {mangaList[i].title}", (ConsoleColor)(i % 5 + 9));
 					Utils.WriteColor("> Select Manga Number: ", ConsoleColor.DarkBlue);
-					switch (int.TryParse(Console.ReadLine(), out int mangaIndex)) {
+					switch (int.TryParse(Console.ReadLine(), out int mangaIndex))
+					{
 					case true:
-						if (mangaIndex < 1 || mangaIndex > mangaList.Count) {
+						if (mangaIndex < 1 || mangaIndex > mangaList.Count)
+						{
 							Utils.WriteError("Please insert number with value in range of listed result");
 							break;
 						}
@@ -49,7 +56,8 @@ class DownloadCommand : Command {
 						if (selectedManga.chapters is null || selectedManga.chapters.Count == 0)
 							throw new Exception("This manga has no chapters");
 
-						for (int i = 0; i < selectedManga.chapters.Count; ++i) {
+						for (int i = 0; i < selectedManga.chapters.Count; ++i)
+						{
 							var chapter = selectedManga.chapters[selectedManga.chapters.Count - i - 1];
 							Utils.WriteLineColor($"[{i + 1}] Chapter {chapter.chap}: {chapter.title}", (ConsoleColor)(i % 5 + 9));
 						}
@@ -60,9 +68,11 @@ There are totally {selectedManga.chapters.Count} chapters
 								ConsoleColor.DarkBlue
 						);
 
-						switch (int.TryParse(Console.ReadLine(), out int chapIndex)) {
+						switch (int.TryParse(Console.ReadLine(), out int chapIndex))
+						{
 						case true:
-							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count) {
+							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
+							{
 								Utils.WriteError("Please insert number with value in range of listed result");
 								break;
 							}
@@ -71,7 +81,8 @@ There are totally {selectedManga.chapters.Count} chapters
 							var downloadTasks = new List<Task>();
 							var basePath = $"{selectedManga.title}".Replace('/', '-') + '/' + $"{chapter.chap}-{chapter.title}".Replace('/', '-');
 							Directory.CreateDirectory(basePath);
-							for (int i = 0; i < pages.Count; i++) {
+							for (int i = 0; i < pages.Count; i++)
+							{
 								int index = i;
 								downloadTasks.Add(Task.Run(
 									File.WriteAllBytesAsync($"{basePath}/page-{index}.jpg", pages[index].bytes))
@@ -90,9 +101,13 @@ There are totally {selectedManga.chapters.Count} chapters
 						break;
 					}
 				}
-			} catch (TimeoutException) {
+			}
+			catch (TimeoutException)
+			{
 				Utils.WriteError("Please recheck your internet connection!");
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Utils.WriteError(e.Message);
 			}
 		}, nameArgument, providerOption, langOption);

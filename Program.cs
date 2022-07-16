@@ -2,11 +2,12 @@ namespace DotNeet;
 
 using DotNeet.Commands;
 
-public class Program {
-
+public class Program
+{
 	public static RootCommand root;
 
-	public static async Task Main(string[] args) {
+	public static async Task Main(string[] args)
+	{
 		root = new();
 		root.Add(new ProvidersListingCommand());
 		root.Add(new SearchCommand());
