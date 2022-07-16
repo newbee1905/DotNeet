@@ -22,8 +22,9 @@ public class Renderer<TPage> : Webview where TPage : BasePage, new()
 	{
 		StringBuilder html = new();
 		SetTitle($"{mangaName} - {chapterName}");
-		foreach (var page in pages)
-			html.Append($"<img src={page.base64} width='100%' style='display:block;margin-left:auto;margin-right:auto;'/>");
+		for (int i = 0; i < pages.Count; i++) {
+			html.Append($"<img src={pages[i].base64} width='100%' id='page-{i}' style='display:block;margin-left:auto;margin-right:auto;'/>");
+		}
 		Navigate(new HtmlContent(html.ToString()));
 		Run();
 	}

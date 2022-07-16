@@ -12,6 +12,7 @@ public abstract class BasePage
 	public byte[] bytes { get; set; }
 	public Stream stream { get; set; }
 	public string src { get; set; }
+	public string filetype { get; set; }
 }
 
 public abstract class BaseChapter<TPage>
@@ -89,7 +90,11 @@ where TPage : BasePage, new()
 	/// </summary>
 	/// <param><c>id</c> is the position of the manga in the list plus one</param>
 	/// <param><c>chapterList</c> chapter's list get above</param>
-	public virtual async Task<TChapter> GetChapter(int chapIndex, List<TChapter> chapterList)
+	/// <param>
+	/// <c>search</c> check if in mode search or not. Skip getting images
+	/// if search
+	/// </param>
+	public virtual async Task<TChapter> GetChapter(int chapIndex, List<TChapter> chapterList, bool search = false)
 		=> await Task.FromResult(new TChapter());
 
 	/// <summary>
@@ -116,6 +121,6 @@ where TPage : BasePage, new()
 	/// </summary>
 	/// <param><c>id</c> is the position of the manga in the list plus one</param>
 	/// <param><c>mangaList</c> manga's list get above</param>
-	public virtual async Task<dynamic> GetPage(string name, int cdnId)
+	public virtual async Task<dynamic> GetPage(string url)
 		=> await Task.FromResult("");
 }

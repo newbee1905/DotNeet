@@ -1,0 +1,95 @@
+@startuml
+class Page {
+    + h : int <<get>> <<set>>
+    + w : int <<get>> <<set>>
+    + b2key : string <<get>> <<set>>
+}
+class Chapter {
+    + title : string <<get>> <<set>>
+    + chap : string <<get>> <<set>>
+    + slug : string <<get>> <<set>>
+    + id : int <<get>> <<set>>
+    + hid : string <<get>> <<set>>
+    + rating : string <<get>> <<set>>
+    + demographic : byte? <<get>> <<set>>
+}
+class Manga {
+    + title : string <<get>> <<set>>
+    + slug : string <<get>> <<set>>
+    + id : int <<get>> <<set>>
+    + rating : string <<get>> <<set>>
+    + desc : string <<get>> <<set>>
+    + parsed : string <<get>> <<set>>
+    + last_chapter : float <<get>> <<set>>
+    + total_chapter : int <<get>> <<set>>
+}
+class Provider {
+    + <<readonly>> PageCdn : string
+    + <<readonly>> SiteUrl : string
+    + Provider()
+    + <<const>> Alias : string = "comickfun"
+    + <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
+    + <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
+    + <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>, search:bool) : Task<Chapter>
+    + <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
+    + <<override>> <<async>> GetPage(url:string) : Task<dynamic>
+    + <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
+}
+class "BaseChapter`1"<T> {
+}
+class "List`1"<T> {
+}
+class "BaseManga`1"<T> {
+}
+class "MangaProvider`3"<T1,T2,T3> {
+}
+BasePage <|-- Page
+"BaseChapter`1" "<Page>" <|-- Chapter
+Chapter --> "md_images<Page>" "List`1"
+"BaseManga`1" "<Chapter>" <|-- Manga
+Manga --> "comic" Manga
+"MangaProvider`3" "<Manga,Chapter,Page>" <|-- Provider
+class ProvidersList {
+    + {static} GetProvider(name:string) : dynamic
+}
+class Page {
+}
+class Chapter {
+    + title : string <<get>> <<set>>
+    + id : string <<get>> <<set>>
+    + chap : string <<get>> <<set>>
+}
+class Manga {
+    + title : string <<get>> <<set>>
+    + slug : string <<get>> <<set>>
+    + id : string <<get>> <<set>>
+    + desc : string <<get>> <<set>>
+    + last_chapter : string <<get>> <<set>>
+}
+class Provider {
+    + Provider()
+    + <<const>> Alias : string = "battwo"
+    + <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
+    + <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
+    + <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>, search:bool) : Task<Chapter>
+    + <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
+    + <<override>> <<async>> GetPage(url:string) : Task<dynamic>
+    + <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
+}
+class "BaseChapter`1"<T> {
+}
+class "List`1"<T> {
+}
+class "BaseManga`1"<T> {
+}
+class "MangaProvider`3"<T1,T2,T3> {
+}
+BasePage <|-- Page
+"BaseChapter`1" "<Page>" <|-- Chapter
+Chapter --> "md_images<Page>" "List`1"
+"BaseManga`1" "<Chapter>" <|-- Manga
+"MangaProvider`3" "<Manga,Chapter,Page>" <|-- Provider
+Provider --> "MangaListRx" Regex
+Provider --> "ChapterIdRx" Regex
+Provider --> "ChapterIndexRx" Regex
+@enduml

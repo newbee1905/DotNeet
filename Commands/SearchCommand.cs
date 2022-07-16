@@ -66,7 +66,7 @@ There are totally {selectedManga.chapters.Count} chapters
 						{
 							if (chapIndex < 1 || chapIndex > selectedManga.chapters.Count)
 								throw new Exception("Please insert number with value in range of listed result");
-							var chapter = await provider.GetChapter(chapIndex, selectedManga.chapters);
+							var chapter = await provider.GetChapter(chapIndex, selectedManga.chapters, true);
 							Utils.WriteLineColor(provider.GetChapterUrl(selectedManga, chapter), ConsoleColor.Green);
 						}
 						else

@@ -14,6 +14,7 @@ namespace DotNeet {
 		+ src : string <<get>> <<set>>
 		+ bytes: byte[] <<get>> <<set>>
 		+ stream : Stream <<get>> <<set>>
+		+ filetype: string <<get>> <<set>>
 	}
 
 	abstract class "BaseChapter`1"<TPage> {
@@ -32,10 +33,10 @@ namespace DotNeet {
 		+ Dispose() : void
 		+ <<virtual>> <<async>> GetMangaList(query:string) : Task<List<TManga>>
 		+ <<virtual>> <<async>> GetManga(mangaIndex:int, mangaList:List<TManga>) : Task<TManga>
-		+ <<virtual>> <<async>> GetChapter(chapIndex:int, chapterList:List<TChapter>) : Task<TChapter>
+		+ <<virtual>> <<async>> GetChapter(chapIndex:int, chapterList:List<TChapter>, search:bool) : Task<TChapter>
 		+ <<virtual>> GetChapterUrl(manga:TManga, chap:TChapter) : String
 		+ <<virtual>> <<async>> GetPages(chap:TChapter) : Task<List<TPage>>
-		+ <<virtual>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
+		+ <<virtual>> <<async>> GetPage(url:string) : Task<dynamic>
 	}
 
 	class "Renderer`1"<T> {
@@ -105,13 +106,48 @@ namespace DotNeet {
 				+ <<const>> Alias : string = "comickfun"
 				+ <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
 				+ <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
-				+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>) : Task<Chapter>
+				+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>, search:bool) : Task<Chapter>
 				+ <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
-				+ <<override>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
+				+ <<override>> <<async>> GetPage(url:string) : Task<dynamic>
+				+ <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
+			}
+		}
+		namespace DotNeet.Providers.Battwo {
+			class Page {
+			}
+			class Chapter {
+				+ title : string <<get>> <<set>>
+				+ id : string <<get>> <<set>>
+				+ chap : string <<get>> <<set>>
+				+ md_images: List<TPage> <<get>> <<set>>
+			}
+			class Manga {
+				+ title : string <<get>> <<set>>
+				+ slug : string <<get>> <<set>>
+				+ id : string <<get>> <<set>>
+				+ desc : string <<get>> <<set>>
+				+ last_chapter : string <<get>> <<set>>
+			}
+			Provider o-- Manga
+			Provider o-- Chapter
+			Provider o-- Page
+			class Provider {
+				+ Provider()
+				+ <<const>> Alias : string = "battwo"
+				+ <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
+				+ <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
+				+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>, search:bool) : Task<Chapter>
+				+ <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
+				+ <<override>> <<async>> GetPage(url:string) : Task<dynamic>
 				+ <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
 			}
 		}
 	}
+
+	BasePage <|-- DotNeet.Providers.Battwo.Page
+	"BaseChapter`1" "<Page>" <|-- DotNeet.Providers.Battwo.Chapter
+	"BaseManga`1" "<Chapter>" <|-- DotNeet.Providers.Battwo.Manga
+	"MangaProvider`3" "<Manga,Chapter,Page>" <|-- DotNeet.Providers.Battwo.Provider
 
 	BasePage <|-- DotNeet.Providers.ComickFun.Page
 	"BaseChapter`1" "<Page>" <|-- DotNeet.Providers.ComickFun.Chapter

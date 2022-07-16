@@ -52,9 +52,9 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 
 	public override async Task<Manga> GetManga(int mangaIndex, List<Manga> mangaList)
 	{
-		var selectedManaga = mangaList[mangaIndex - 1];
+		var selectedManga = mangaList[mangaIndex - 1];
 		using (var mangaRes = await Client.GetAsync(
-				$"comic/{selectedManaga.slug}",
+				$"comic/{selectedManga.slug}",
 				HttpCompletionOption.ResponseHeadersRead
 			)
 		)
@@ -65,7 +65,7 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 			var manga = (await JsonSerializer.DeserializeAsync<Manga>(mangaStream)).comic;
 
 			using (var chapterRes = await Client.GetAsync(
-				$"comic/{selectedManaga.id}/chapter?lang={Lang}",
+				$"comic/{selectedManga.id}/chapter?lang={Lang}",
 				HttpCompletionOption.ResponseHeadersRead
 			))
 			{
@@ -82,7 +82,7 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 		}
 	}
 
-	public override async Task<Chapter> GetChapter(int chapIndex, List<Chapter> chapterList)
+	public override async Task<Chapter> GetChapter(int chapIndex, List<Chapter> chapterList, bool search = false)
 	{
 		var selectedChapter = chapterList[chapterList.Count - chapIndex];
 		using (var chapterRes = await Client.GetAsync(
@@ -113,12 +113,13 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 				{
 					try
 					{
-						var page = await GetPage(chap.md_images[index].b2key, cdnId++);
+						var cdnLink = String.Format(PageCdn, cdnId == 1 ? "" : cdnId, chap.md_images[index].b2key);
+						var page = await GetPage(cdnLink);
+						cdnId++;
 						chap.md_images[index].src = page.cdnLink;
 						chap.md_images[index].base64 = page.base64;
 						chap.md_images[index].stream = page.stream;
 						chap.md_images[index].bytes = page.bytes;
-						// await File.WriteAllBytesAsync($"./page-{index}.jpg", page.bytes);
 						// Utils.WriteLineColor($"sucess ({chap.md_images[index].b2key}): {cdnId - 1}", ConsoleColor.Green);
 						// Console.WriteLine(chap.md_images[index].src);
 						break;
@@ -137,16 +138,10 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 		return await Task.FromResult(chap.md_images);
 	}
 
-	public override async Task<dynamic> GetPage(string name, int cdnId)
+	public override async Task<dynamic> GetPage(string url)
 	{
-		if (cdnId == 5)
-			return await Task.FromResult("");
-
-		var cdnLink = String.Format(PageCdn, cdnId == 1 ? "" : cdnId, name);
-		// Utils.WriteLineColor($"test {cdnLink}", ConsoleColor.Yellow);
-
 		using (var pageRes = await Client.GetAsync(
-				cdnLink,
+				url,
 				HttpCompletionOption.ResponseHeadersRead
 			)
 		)
@@ -159,7 +154,7 @@ public class Provider : MangaProvider<Manga, Chapter, Page>
 			// Currently only using cdnlink and bytes
 			return await Task.FromResult(new
 			{
-				cdnLink = cdnLink,
+				cdnLink = url,
 				base64 = pageBase64,
 				stream = pageStream,
 				bytes = pageBytes

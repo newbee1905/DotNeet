@@ -1,7 +1,5 @@
-enduml
 @startuml
 namespace DotNeet {
-	namespace DotNeet.Providers {
 	namespace DotNeet.Providers.ComickFun {
 		class Page {
 			+ h : int <<get>> <<set>>
@@ -39,12 +37,11 @@ namespace DotNeet {
 			+ <<const>> Alias : string = "comickfun"
 			+ <<override>> <<async>> GetMangaList(query:string) : Task<List<Manga>>
 			+ <<override>> <<async>> GetManga(mangaIndex:int, mangaList:List<Manga>) : Task<Manga>
-			+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>, search:bool) : Task<Chapter>
+			+ <<override>> <<async>> GetChapter(chapIndex:int, chapterList:List<Chapter>) : Task<Chapter>
 			+ <<override>> <<async>> GetPages(chap:Chapter) : Task<List<Page>>
-			+ <<override>> <<async>> GetPage(url:string) : Task<dynamic>
+			+ <<override>> <<async>> GetPage(name:string, cdnId:int) : Task<dynamic>
 			+ <<override>> GetChapterUrl(manga:Manga, chap:Chapter) : String
 		}
-	}
 	}
 
 	BasePage <|-- DotNeet.Providers.ComickFun.Page
