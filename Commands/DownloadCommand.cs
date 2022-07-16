@@ -13,6 +13,8 @@ class DownloadCommand : Command {
 		new("manga-name", "Manga's name or part of it that you want to download.");
 	private Option<string> providerOption =
 		new(name: "--provider", description: "Provider you want to download from", getDefaultValue: () => Providers.ComickFun.Provider.Alias);
+	private Option<string> langOption =
+		new(name: "--lang", description: "Manga's lang you want to download", getDefaultValue: () => "en");
 
 	/// <summary>
 	/// Setting up download command
@@ -23,12 +25,14 @@ class DownloadCommand : Command {
 	public DownloadCommand() : base("download", "Download Manga to read.") {
 		this.AddArgument(nameArgument);
 		this.AddOption(providerOption);
+		this.AddOption(langOption);
 
-		this.SetHandler(async (mangaName, providerName) => {
+		this.SetHandler(async (mangaName, providerName, lang) => {
 			try {
 				using (var provider = ProvidersList.GetProvider(providerName)) {
 					if (provider is null)
 						throw new Exception("Please select existed provider!");
+					provider.Lang = lang;
 					var mangaList = await provider.GetMangaList(mangaName);
 					for (int i = 0; i < mangaList.Count; ++i)
 						Utils.WriteLineColor($"[{i + 1}] {mangaList[i].title}", (ConsoleColor)(i % 5 + 9));
@@ -91,7 +95,7 @@ There are totally {selectedManga.chapters.Count} chapters
 			} catch (Exception e) {
 				Utils.WriteError(e.Message);
 			}
-		}, nameArgument, providerOption);
+		}, nameArgument, providerOption, langOption);
 	}
 }
 

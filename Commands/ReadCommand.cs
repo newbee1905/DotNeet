@@ -11,6 +11,8 @@ class ReadCommand : Command {
 		new("manga-name", "Manga's name or part of it that you want to read.");
 	private Option<string> providerOption =
 		new(name: "--provider", description: "Provider you want to read from", getDefaultValue: () => Providers.ComickFun.Provider.Alias);
+	private Option<string> langOption =
+		new(name: "--lang", description: "Manga's lang you want to read", getDefaultValue: () => "en");
 
 	/// <summary>
 	/// Setting up read command
@@ -21,12 +23,14 @@ class ReadCommand : Command {
 	public ReadCommand() : base("read", "Read Manga to read.") {
 		this.AddArgument(nameArgument);
 		this.AddOption(providerOption);
+		this.AddOption(langOption);
 
-		this.SetHandler((mangaName, providerName) => {
+		this.SetHandler((mangaName, providerName, lang) => {
 			try {
 				using (var provider = Providers.ProvidersList.GetProvider(providerName)) {
 					if (provider is null)
 						throw new Exception("Please select existed provider!");
+					provider.Lang = lang;
 					var mangaList = provider.GetMangaList(mangaName).Result;
 					for (int i = 0; i < mangaList.Count; ++i)
 						Utils.WriteLineColor($"[{i + 1}] {mangaList[i].title}", (ConsoleColor)(i % 5 + 9));
@@ -74,8 +78,7 @@ There are totally {selectedManga.chapters.Count} chapters
 			} catch (Exception e) {
 				Utils.WriteError(e.Message);
 			}
-
-		}, nameArgument, providerOption);
+		}, nameArgument, providerOption, langOption);
 	}
 }
 
