@@ -38,6 +38,12 @@ dotnet build --configuration Release
 ./bin/Release/net6.0/DotNeet [command] [options]
 ```
 
+If you are using Window
+
+```powershell
+.\bin\Release\net6.0\DotNeet [command] [options]
+```
+
 ## Help
 
 - `search` → return the URL of that chapter
