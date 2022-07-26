@@ -12,6 +12,14 @@ Please install the developer packages of webkit2gtk and libgtk on your machine.
 
 Currently, the program is not compilable on MacOS
 
+### Windows
+
+Add nuget sources if you haven't for building the program
+
+```bash
+dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+```
+
 ### Debian and Ubuntu based
 
 ```bash
